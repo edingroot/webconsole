@@ -143,20 +143,20 @@ class SubscriberModal extends Component {
               "sd": "010203",
               "sst": 1
             },
-            {
-              "sd": "112233",
-              "sst": 1
-            }
+            // {
+            //   "sd": "112233",
+            //   "sst": 1
+            // }
           ],
           "singleNssais": [
             {
               "sd": "010203",
               "sst": 1
             },
-            {
-              "sd": "112233",
-              "sst": 1
-            }
+            // {
+            //   "sd": "112233",
+            //   "sst": 1
+            // }
           ]
         },
         "subscribedUeAmbr": {
@@ -202,13 +202,13 @@ class SubscriberModal extends Component {
               }
             ]
           },
-          "01112233": {
-            "dnnInfos": [
-              {
-                "dnn": "internet"
-              }
-            ]
-          }
+          // "01112233": {
+          //   "dnnInfos": [
+          //     {
+          //       "dnn": "internet"
+          //     }
+          //   ]
+          // }
         },
       },
       "AmPolicyData": {
@@ -229,17 +229,17 @@ class SubscriberModal extends Component {
               }
             }
           },
-          "01112233": {
-            "snssai": {
-              "sst": 1,
-              "sd": "112233"
-            },
-            "smPolicyDnnData": {
-              "internet": {
-                "dnn": "internet"
-              }
-            }
-          }
+          // "01112233": {
+          //   "snssai": {
+          //     "sst": 1,
+          //     "sd": "112233"
+          //   },
+          //   "smPolicyDnnData": {
+          //     "internet": {
+          //       "dnn": "internet"
+          //     }
+          //   }
+          // }
         }
       }
     };
@@ -262,11 +262,11 @@ class SubscriberModal extends Component {
 
         <Modal.Body>
           {this.state.rerenderCounter % 2 === 0 &&
-            <Form schema={this.schema}
-              uiSchema={this.uiSchema}
-              formData={this.state.formData}
-              onChange={this.onChange.bind(this)}
-              onSubmit={this.onSubmitClick.bind(this)} />
+          <Form schema={this.schema}
+                uiSchema={this.uiSchema}
+                formData={this.state.formData}
+                onChange={this.onChange.bind(this)}
+                onSubmit={this.onSubmitClick.bind(this)} />
           }
         </Modal.Body>
       </Modal>
