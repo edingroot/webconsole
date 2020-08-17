@@ -67,11 +67,10 @@ class DetailButton extends Component {
 class UEInfo extends Component  {
 
   componentDidMount() {
-    UEInfoApiHelper.fetchRegisteredUE().then(() => {
-
-      // console.log("After fetchRegisteredUE")
-      // console.log(this.props.get_registered_ue_err)
-    });
+    // Fetch ue info per 1 second
+    setInterval(() => {
+      UEInfoApiHelper.fetchRegisteredUE().then();
+    }, 1000);
   }
 
   cellButton(cell, row, enumObject, rowIndex) {
