@@ -97,6 +97,7 @@ class UEInfo extends Component {
   }
 
   render() {
+    console.log(this.props.registered_users);
     return (
       <div className="container-fluid">
         <div className="row">
