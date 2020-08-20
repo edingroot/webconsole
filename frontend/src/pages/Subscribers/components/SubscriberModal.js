@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { Modal } from "react-bootstrap";
 import Form from "react-jsonschema-form";
 import PropTypes from 'prop-types';
+import Subscriber from "../../../models/Subscriber";
 
 class SubscriberModal extends Component {
   static propTypes = {
     open: PropTypes.bool.isRequired,
     setOpen: PropTypes.func.isRequired,
+    subscriber: PropTypes.object,
+    onModify: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -72,6 +75,23 @@ class SubscriberModal extends Component {
       "ui:widget": "select",
     },
   };
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    if (nextProps !== this.props && nextProps.subscriber) {
+      const subscriber = nextProps.subscriber;
+      console.log(subscriber);
+
+      let formData = {
+        plmnID: subscriber['plmnID'],
+      };
+
+      this.setState({formData: formData});
+      console.log(formData);
+      return true;
+    }
+
+    return nextProps !== this.props;
+  }
 
   async onChange(data) {
     const lastData = this.state.formData;

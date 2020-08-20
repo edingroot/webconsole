@@ -8,6 +8,7 @@ import ApiHelper from "../../util/ApiHelper";
 class SubscriberOverview extends Component {
   state = {
     subscriberModalOpen: false,
+    subscriberModalData: null,
   };
 
   componentDidMount() {
@@ -18,6 +19,19 @@ class SubscriberOverview extends Component {
     this.setState({subscriberModalOpen: true});
   }
 
+  /**
+   * @param subscriberId  {number}
+   * @param plmn          {number}
+   */
+  async openEditSubscriber(subscriberId, plmn) {
+    const subscriber = await ApiHelper.fetchSubscriberById(subscriberId, plmn);
+
+    this.setState({
+      subscriberModalOpen: true,
+      subscriberModalData: subscriber,
+    });
+  }
+
   async addSubscriber(subscriberData) {
     this.setState({subscriberModalOpen: false});
 
@@ -25,6 +39,17 @@ class SubscriberOverview extends Component {
       alert("Error creating new subscriber");
     }
     ApiHelper.fetchSubscribers().then();
+  }
+
+  /**
+   * @param subscriber  {Subscriber}
+   */
+  async updateSubscriber(subscriber) {
+    const result = await ApiHelper.updateSubscriber(subscriber.id, subscriber.plmn);
+
+    if (!result) {
+      alert("Error updating subscriber: " + subscriber.id);
+    }
   }
 
   /**
@@ -68,6 +93,8 @@ class SubscriberOverview extends Component {
                       <td>{subscriber.plmn}</td>
                       <td>{subscriber.id}</td>
                       <td style={{textAlign: 'center'}}>
+                        <i className="fa fa-pencil-alt" onClick={this.openEditSubscriber.bind(this, subscriber.id, subscriber.plmn)}/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <i className="fa fa-trash-alt" onClick={this.deleteSubscriber.bind(this, subscriber)}/>
                       </td>
                     </tr>
@@ -85,6 +112,8 @@ class SubscriberOverview extends Component {
 
         <SubscriberModal open={this.state.subscriberModalOpen}
                          setOpen={val => this.setState({subscriberModalOpen: val})}
+                         subscriber={this.state.subscriberModalData}
+                         onModify={this.updateSubscriber.bind(this)}
                          onSubmit={this.addSubscriber.bind(this)}/>
       </div>
     );
