@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { Modal } from "react-bootstrap";
+import React, {Component} from 'react';
+import {Modal} from "react-bootstrap";
 import Form from "react-jsonschema-form";
 import PropTypes from 'prop-types';
-import Subscriber from "../../../models/Subscriber";
 
 class SubscriberModal extends Component {
   static propTypes = {
