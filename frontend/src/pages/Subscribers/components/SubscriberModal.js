@@ -13,6 +13,7 @@ class SubscriberModal extends Component {
   };
 
   state = {
+    editMode: false,
     formData: undefined,
     // for force re-rendering json form
     rerenderCounter: 0,
@@ -75,21 +76,27 @@ class SubscriberModal extends Component {
     },
   };
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (nextProps !== this.props && nextProps.subscriber) {
-      const subscriber = nextProps.subscriber;
-      console.log(subscriber);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps !== this.props) {
+      this.setState({editMode: !!this.props.subscriber});
 
-      let formData = {
-        plmnID: subscriber['plmnID'],
-      };
+      if (this.props.subscriber) {
+        const subscriber = this.props.subscriber;
+        const isOp = subscriber['AuthenticationSubscription']["milenage"]["op"]["opValue"] !== "";
 
-      this.setState({formData: formData});
-      console.log(formData);
-      return true;
+        let formData = {
+          plmnID: subscriber['plmnID'],
+          ueId: subscriber['ueId'].replace("imsi-", ""),
+          authenticationMethod: subscriber['AuthenticationSubscription']["authenticationMethod"],
+          K: subscriber['AuthenticationSubscription']["permanentKey"]["permanentKeyValue"],
+          OPOPcSelect: isOp ? "OP" : "OPc",
+          OPOPc: isOp ? subscriber['AuthenticationSubscription']["milenage"]["op"]["opValue"] :
+                        subscriber['AuthenticationSubscription']["opc"]["opcValue"],
+        };
+
+        this.updateFormData(formData).then();
+      }
     }
-
-    return nextProps !== this.props;
   }
 
   async onChange(data) {
@@ -104,12 +111,7 @@ class SubscriberModal extends Component {
       const plmn = newData.plmnID ? newData.plmnID : "";
       newData.ueId = plmn + newData.ueId.substr(lastData.plmnID.length);
 
-      // Workaround for bug: https://github.com/rjsf-team/react-jsonschema-form/issues/758
-      await this.setState({ rerenderCounter: this.state.rerenderCounter + 1 });
-      await this.setState({
-        rerenderCounter: this.state.rerenderCounter + 1,
-        formData: newData,
-      });
+      await this.updateFormData(newData);
 
       // Keep plmnID input focused at the end
       const plmnInput = document.getElementById("root_plmnID");
@@ -120,6 +122,15 @@ class SubscriberModal extends Component {
         formData: newData,
       });
     }
+  }
+
+  async updateFormData(newData) {
+    // Workaround for bug: https://github.com/rjsf-team/react-jsonschema-form/issues/758
+    await this.setState({ rerenderCounter: this.state.rerenderCounter + 1 });
+    await this.setState({
+      rerenderCounter: this.state.rerenderCounter + 1,
+      formData: newData,
+    });
   }
 
   onSubmitClick(result) {
@@ -275,7 +286,7 @@ class SubscriberModal extends Component {
         onHide={this.props.setOpen.bind(this, false)}>
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-lg">
-            New Subscriber
+            {this.state.editMode ? "Edit Subscriber" : "New Subscriber"}
           </Modal.Title>
         </Modal.Header>
 
