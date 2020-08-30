@@ -35,19 +35,6 @@ class SubscriberOverview extends Component {
     });
   }
 
-  /**
-   * @param subscriberId  {number}
-   * @param plmn          {number}
-   */
-  async openEditSubscriber(subscriberId, plmn) {
-    const subscriber = await ApiHelper.fetchSubscriberById(subscriberId, plmn);
-
-    this.setState({
-      subscriberModalOpen: true,
-      subscriberModalData: subscriber,
-    });
-  }
-
   async addSubscriber(subscriberData) {
     this.setState({subscriberModalOpen: false});
 
